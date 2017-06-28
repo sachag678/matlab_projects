@@ -43,14 +43,14 @@ cases(:,:) = num2cell(data(:,:)');	% copy the data
 
 %setup evidence
 evidence = cell(1,n);
-evidence{F} = 0.5667;
-evidence{B} = 2;
+evidence{F} = -2.9;
+evidence{B} = 1;
 
 %enter evidence
 engine = enter_evidence(engine, evidence);
 
 %calculate marginal on a specific node
-marg = marginal_nodes(engine, G);
+marg = marginal_nodes(engine, 3);
 marg.T
 
 % CPT1 = cell(1,3);
