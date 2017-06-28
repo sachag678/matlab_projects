@@ -43,8 +43,8 @@ cases(:,:) = num2cell(data(:,:)');	% copy the data
 
 %setup evidence
 evidence = cell(1,n);
-evidence{F} = 0.5667;
-evidence{B} = 2;
+%evidence{F} = 200;
+evidence{B} = 1;
 
 %enter evidence
 engine = enter_evidence(engine, evidence);
@@ -53,15 +53,15 @@ engine = enter_evidence(engine, evidence);
 marg = marginal_nodes(engine, G);
 marg.T
 
-% CPT1 = cell(1,3);
-% for i=[1 3]
-%   s1=struct(bnet2.CPD{i});  % violate object privacy
-%   CPT1{i}=s1.CPT;
-% end
-% 
-% %outputs the probabilities
-%  celldisp(CPT1)
-%  
-%  gauss = struct(bnet2.CPD{2});
-%  gauss.mean
-%  gauss.cov
+CPT1 = cell(1,3);
+for i=[1 3]
+  s1=struct(bnet2.CPD{i});  % violate object privacy
+  CPT1{i}=s1.CPT;
+end
+
+%outputs the probabilities
+ celldisp(CPT1)
+ 
+ gauss = struct(bnet2.CPD{2});
+ gauss.mean
+ gauss.cov
