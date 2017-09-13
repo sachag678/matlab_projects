@@ -2,7 +2,7 @@ F = 2; G = 3; B=1;
 n = 3;
 dag = zeros(n,n);
 dag(G,F)=1;
-dag(B,G)=1;
+dag(B,F)=1;
 
 s = RandStream('mcg16807','Seed',0);
 RandStream.setGlobalStream(s);
@@ -18,13 +18,13 @@ bnet = mk_bnet(dag, ns, dnodes); % create bnet with dag and definition of dnodes
 
 %setup
 bnet.CPD{3} = tabular_CPD(bnet, 3); % final one should be softmax
-bnet.CPD{2} = gaussian_CPD(bnet, 2); %gaussian
+bnet.CPD{2} = vonMises_CPD(bnet, 2); %gaussian
 bnet.CPD{1} = tabular_CPD(bnet, 1); %tabular
 
 
 %create inference engine
 %engine = likelihood_weighting_inf_engine(bnet);
-engine = jtree_inf_engine(bnet);
+%engine = jtree_inf_engine(bnet);
 
 %get data
 data = [];
@@ -38,9 +38,9 @@ cases = cell(n,ncases);		% create an empty table to store the data to be given t
 cases(:,:) = num2cell(data(:,:)');	% copy the data
 
 %learn
-[bnet2, ~, engine] = learn_params_em(engine, cases);
-%bnet2 = learn_params(bnet, cases);
-
+%[bnet2, ~, engine] = learn_params_em(engine, cases);
+bnet2 = learn_params(bnet, cases);
+engine = jtree_inf_engine(bnet2);
 %setup evidence
 evidence = cell(1,n);
 evidence{F} = -2.9;
