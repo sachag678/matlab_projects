@@ -20,7 +20,9 @@ ReSqr = (n/(n-1))*(Rsqr-(1/n));
 
 % syms m
 % k = vpasolve(besseli(1,m)==besseli(0,m)*ReSqr,m);
-
-k = fzero(@(l) besseli(1,l)-besseli(0,l)*ReSqr,[0,100]);
+if mean(data)==data(1)
+    k = 1;
+else
+    k = fzero(@(l) besseli(1,l)-besseli(0,l)*ReSqr,[0,100]);
 end
 
