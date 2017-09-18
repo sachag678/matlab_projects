@@ -1,6 +1,6 @@
 %EM algorithm - example - coin toss with two biased coins. 
 % we know the head tail seq but don't know which coin was used for which
-% experiment. we want to find the bias of the coins.
+% experiment. we want to find the bias of the coins.fgruhs
 estA = zeros(1,20);
 estB = zeros(1,20);
 
