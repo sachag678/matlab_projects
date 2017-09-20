@@ -9,7 +9,7 @@ dnodes = 1;
 
 bnet = mk_bnet(dag, ns, dnodes); % create bnet with dag and definition of dnodes
 
-bnet.CPD{2} = gaussian_CPD(bnet, 2); %gaussian
+bnet.CPD{2} = vonMises_CPD(bnet, 2); %vonMises
 bnet.CPD{1} = tabular_CPD(bnet, 1); %tabular
 
 %get data

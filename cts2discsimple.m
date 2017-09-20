@@ -18,7 +18,7 @@ bnet = mk_bnet(dag, ns, dnodes); % create bnet with dag and definition of dnodes
 
 %setup
 bnet.CPD{3} = tabular_CPD(bnet, 3); % final one should be softmax
-bnet.CPD{2} = vonMises_CPD(bnet, 2); %gaussian
+bnet.CPD{2} = gaussian_CPD(bnet, 2); %gaussian
 bnet.CPD{1} = tabular_CPD(bnet, 1); %tabular
 
 
@@ -43,7 +43,7 @@ bnet2 = learn_params(bnet, cases);
 engine = jtree_inf_engine(bnet2);
 %setup evidence
 evidence = cell(1,n);
-evidence{F} = -2.9;
+%evidence{F} = -2.9;
 evidence{B} = 1;
 
 %enter evidence
