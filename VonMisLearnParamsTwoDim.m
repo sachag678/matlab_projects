@@ -13,7 +13,7 @@ z=sum(exp(1i*(data)))/n;
 mu = angle(z);
 
 %calculate R^2
-Rsqr = ((sum(cos(data))*(1/n))^2 + (sum(sin(data))*(1/n))^2);
+Rsqr = ((sum(cos(data))*(1/n))*cos(mu) + (sum(sin(data))*(1/n))*sin(mu));
 
 %calc Re^2
 ReSqr = (n/(n-1))*(Rsqr-(1/n));
@@ -23,6 +23,8 @@ ReSqr = (n/(n-1))*(Rsqr-(1/n));
 if mean(data)==data(1)
     k = 1;
 else
-    k = fzero(@(l) besseli(1,l)-besseli(0,l)*ReSqr,[0,100]);
+    %k = fzero(@(l) besseli(1,l)-besseli(0,l)*ReSqr,[0,100]);
+    A = Rsqr;
+    k = A*(2-A^2)/(1-A^2);
 end
 
