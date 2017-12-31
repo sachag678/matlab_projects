@@ -34,4 +34,5 @@ y_new = new_weights'*test_features;
 
 percent = 100*(1-(y_old-y_new)/(y_old));
 
-fprintf('There is a %.f%% similarity between the output using the old and new weights. \n',percent)
+fprintf('There is a %.f%% similarity between the output using the old '...
+    ,'and new weights. \n',percent)
