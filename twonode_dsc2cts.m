@@ -28,6 +28,15 @@ cases([1:n],:) = num2cell(data(:,:)');	% copy the data
 bnet2 = learn_params(bnet, cases);
 engine = jtree_inf_engine(bnet2);
 
+s = struct(bnet2.CPD{2});
+mu = s.mean;
+k = s.con;
+fprintf('Learned Parameters: ----------------- \n');
+fprintf('The mean for X=1 is %.4f and X=2 is %.4f \n',mu(1),mu(2));
+fprintf('The k for X=1 is %.4f and X=2 is %.4f \n\n',k(:,:,1),k(:,:,2));
+
+%PERFORM INFERENCE
+%-------------------------------------------------------------------------
 evidence = cell(1,n);
 evidence{C} = 0.9*pi;
 
@@ -35,5 +44,8 @@ engine = enter_evidence(engine, evidence);
 
 %calculate marginal on a specific node
 marg = marginal_nodes(engine, 1);
-marg.T
+prob = marg.T;
+fprintf('Inference: --------------------------------- \n');
+fprintf('P(X=1|Y=0.9pi) = %.2f \n',prob(1));
+fprintf('P(X=2|Y=0.9pi) = %.2f \n',prob(2));
 
