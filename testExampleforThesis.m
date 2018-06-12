@@ -1,14 +1,14 @@
-D=1;C=2;
+Action=1;BallDirection=2;
 n=2;
 dag = zeros(n,n);
-dag(D,C)=1;
+dag(Action,BallDirection)=1;
 
 ns = [2 1];
 dnodes = 1;
 
 bnet = mk_bnet(dag, ns, dnodes); % create bnet with dag and definition of dnodes
 
-bnet.CPD{2} = vonMises_CPD(bnet, 2); %vonMises
+bnet.CPD{2} = gaussian_CPD(bnet, 2); %vonMises
 bnet.CPD{1} = tabular_CPD(bnet, 1); %tabular
 
 %get data
@@ -19,7 +19,7 @@ bnet.CPD{1} = tabular_CPD(bnet, 1); %tabular
 %data2 = [ones(num_data_points,1)*2,data2];
 %data = [data1;data2];
 
-data = [1 0.1*pi; 2 0.8*pi; 2 0.9*pi; 1 0.2*pi];
+data = [1 0.1; 2 0.8; 2 0.9; 1 0.2];
 %data = [1 0.8*pi; 1 0.9*pi];
 %data = degtorad(data);
 ncases = size(data, 1);			% number of data points
@@ -28,32 +28,21 @@ cases([1:n],:) = num2cell(data(:,:)');	% copy the data
 
 %learn
 %learn EM
-engine = jtree_inf_engine(bnet);
-[bnet2, ~, engine] = learn_params_em(engine, cases);
+%engine = jtree_inf_engine(bnet);
+%[bnet2, ~, engine] = learn_params_em(engine, cases);
 
 %learn ML
-%bnet2 = learn_params(bnet, cases);
-%engine = jtree_inf_engine(bnet2);
+bnet2 = learn_params(bnet, cases);
+engine = jtree_inf_engine(bnet2);
 
-s = struct(bnet2.CPD{2});
-mu = s.mean;
-k = s.con;
-fprintf('Learned Parameters: ----------------- \n');
-fprintf('The mean for X=1 is %.4f and X=2 is %.4f \n',mu(1),mu(2));
-fprintf('The k for X=1 is %.4f and X=2 is %.4f \n\n',k(:,:,1),k(:,:,2));
-
-%Assertion for testing the distribution parameters - against the 
-%distribution params from the stats toolbox in python.  
-assert(abs(mu(1)-0.4712)<0.0001)
-assert(abs(mu(2)-2.6704)<0.0001)
-assert(abs(k(:,:,1)-40.8767)<0.01)
-assert(abs(k(:,:,2)-40.8767)<0.01)
+network = struct(bnet2.CPD{1});
+network.CPT
 
 %PERFORM INFERENCE
 %-------------------------------------------------------------------------
 evidence = cell(1,n);
 
-evidence{C} =0.9*pi;
+%evidence{BallDirection} =0.55;
 
 engine = enter_evidence(engine, evidence);
 

@@ -1,9 +1,7 @@
-BallDirection = 2; Action = 3; BallSeen=1;
-n = 3;
+BallDirection = 1; Action = 2;
+n = 2;
 dag = zeros(n,n);
-dag(Action,BallDirection)=1;
-dag(BallSeen,Action)=1;
-dag(BallSeen,BallDirection)=1;
+dag(BallDirection,Action)=1;
 
 s = RandStream('mcg16807','Seed',0);
 RandStream.setGlobalStream(s);
@@ -12,15 +10,14 @@ RandStream.setGlobalStream(s);
 % dnodes = E; %define discrete nodes
 % cnodes = mysetdiff(1:n, dnodes);%number of continuous nodes
 % ns(dnodes) = 2; %node size of the discrete variables
-ns = [2 1 2];
-dnodes = [1 3];
+ns = [1 3];
+dnodes = [2];
 
 bnet = mk_bnet(dag, ns, dnodes); % create bnet with dag and definition of dnodes
 
 %setup
-bnet.CPD{3} = tabular_CPD(bnet, 3); % final one should be softmax
-bnet.CPD{2} = gaussian_CPD(bnet, 2); %gaussian
-bnet.CPD{1} = tabular_CPD(bnet, 1); %tabular
+bnet.CPD{1} = gaussian_CPD(bnet, 1); %gaussian
+bnet.CPD{2} = softmax_CPD(bnet, 2); %tabular
 
 
 %create inference engine
@@ -29,7 +26,7 @@ engine = jtree_inf_engine(bnet);
 
 %get data
 data = [];
-traces = 's_obst2_n.csv';
+traces = 's_obst2_n2.csv';
 for i = 1:size(traces,1)
   tmp = load(traces(i,:));
   data = [data ; tmp];
@@ -40,12 +37,12 @@ cases(:,:) = num2cell(data(:,:)');	% copy the data
 
 %learn
 [bnet3, ~, engine] = learn_params_em(engine, cases);
-%bnet2 = learn_params(bnet, cases);
-%engine = gaussian_inf_engine(bnet3);
+%bnet2 = learn_params_(bnet, cases);
+%engine = jtree_inf_engine(bnet2);
 %setup evidence
 evidence = cell(1,n);
-%evidence{BallDirection} = 6.6;
-evidence{BallSeen} = 1;
+evidence{BallDirection} = 1.9;
+%evidence{BallSeen} = 1;
 
 %enter evidence
 engine = enter_evidence(engine, evidence);
